@@ -28,9 +28,9 @@ Desarrollar un juego ligero que permita iniciar partidas rápidas, romper bloque
    ```bash
    git clone https://github.com/AbigailAlmachi/Rombe.git
 
-
-## Funcionalidades implementadas
+## ⚙️ Funcionalidades implementadas
 - Login
 - Registro
 - Validaciones
 - Navegación
+
