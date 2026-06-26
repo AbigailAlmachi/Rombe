@@ -29,8 +29,12 @@ Desarrollar un juego ligero que permita iniciar partidas rápidas, romper bloque
    git clone https://github.com/AbigailAlmachi/Rombe.git
 
 # ROMBE
-## 📱 Registro
-...
+## 📱 Descripción del problema que resuelve
+Muchos juegos móviles interrumpen la experiencia con anuncios...
+
+## 🎯 Objetivo de la aplicación
+Desarrollar un juego ligero...
+
 ## ⚙️ Funcionalidades implementadas
 - Login
 - Registro
