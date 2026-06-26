@@ -27,3 +27,10 @@ Desarrollar un juego ligero que permita iniciar partidas rápidas, romper bloque
 1. Clonar el repositorio:  
    ```bash
    git clone https://github.com/AbigailAlmachi/Rombe.git
+
+
+## Funcionalidades implementadas
+- Login
+- Registro
+- Validaciones
+- Navegación
