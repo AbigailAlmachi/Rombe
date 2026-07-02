@@ -41,3 +41,31 @@ Desarrollar un juego ligero...
 - Validaciones
 - Navegación
 
+## 🏗️ Arquitectura
+- MVVM (Modelo, Vista, ViewModel)
+- Room (SQLite) para almacenamiento local
+- Firebase Firestore para sincronización de datos
+- Navigation Component para la navegación entre pantallas
+
+## ✨ Funcionalidades CRUD
+- Crear jugador
+- Leer lista de jugadores
+- Actualizar datos de jugador
+- Eliminar jugador
+
+## 📸 Capturas de la aplicación
+![Lista de jugadores](screenshots/lista.png)
+![Crear jugador](screenshots/crear.png)
+![Editar jugador](screenshots/editar.png)
+![Eliminar jugador](screenshots/eliminar.png)
+
+## 📝 Historial de commits
+- feat: implementar entidad Jugador con Room
+- feat: agregar formulario de creación de jugador
+- feat: mostrar lista de jugadores en RecyclerView
+- fix: corregir validación de campo puntaje
+- docs: actualizar README con arquitectura y capturas
+
+## 🚀 Estado del proyecto
+El proyecto se encuentra en versión MVP con funcionalidades CRUD completas y notificaciones locales programadas.
+
