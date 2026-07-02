@@ -69,3 +69,5 @@ Desarrollar un juego ligero...
 ## 🚀 Estado del proyecto
 El proyecto se encuentra en versión MVP con funcionalidades CRUD completas y notificaciones locales programadas.
 
+## 📌 Nota
+Este README fue actualizado con arquitectura, CRUD y capturas.
