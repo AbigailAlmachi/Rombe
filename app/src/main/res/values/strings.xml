@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ROMBE</string>
+    <string name="login_app_logo">LoginApp</string>
+    <string name="email_hint">Correo electrónico</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="login_button_text">Iniciar sesión</string>
+    <string name="register_link_text">¿No tienes cuenta? Regístrate</string>
+    <string name="register_title">Registro</string>
+    <string name="full_name_hint">Nombre completo</string>
+    <string name="confirm_password_hint">Confirmar contraseña</string>
+    <string name="register_button_text">Registrarse</string>
+</resources>
