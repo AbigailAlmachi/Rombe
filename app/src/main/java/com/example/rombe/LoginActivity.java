@@ -2,87 +2,63 @@ package com.example.rombe;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
-import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
 public class LoginActivity extends AppCompatActivity {
-
-    private TextInputEditText emailEditText;
-    private TextInputEditText passwordEditText;
-    private TextInputLayout emailLayout;
-    private TextInputLayout passwordLayout;
-    private MaterialButton loginButton;
-    private TextView registerLink;
+    private EditText edtUser, edtPassword;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Enlazar vistas con IDs del XML
-        emailEditText = findViewById(R.id.emailInput);
-        passwordEditText = findViewById(R.id.passwordInput);
-        emailLayout = findViewById(R.id.emailLayout);
-        passwordLayout = findViewById(R.id.passwordLayout);
-        loginButton = findViewById(R.id.loginButton);
-        registerLink = findViewById(R.id.registerLink);
+        // Inicializar vistas
+        edtUser = findViewById(R.id.edtUser);
+        edtPassword = findViewById(R.id.edtPassword);
+        Button btnLogin = findViewById(R.id.btnLogin);
+        TextView linkRegistro = findViewById(R.id.linkRegistro);
 
-        // Listener clásico en Java
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateInputs();
+        // Inicializar Base de Datos
+        db = AppDatabase.getInstance(this);
+
+        // Configurar botón Iniciar Sesión
+        btnLogin.setOnClickListener(v -> {
+            String identifier = edtUser.getText().toString().trim();
+            String password = edtPassword.getText().toString().trim();
+
+            if (identifier.isEmpty() || password.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            // Login en hilo secundario para evitar bloqueos
+            new Thread(() -> {
+                User user = db.userDao().login(identifier, password);
+
+                runOnUiThread(() -> {
+                    if (user != null) {
+                        Toast.makeText(LoginActivity.this, "¡Bienvenido " + user.name + "!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("USER_ID", user.id);
+                        intent.putExtra("USER_NAME", user.name);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }).start();
         });
 
-        // Listener para enlace de registro
-        registerLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    private void validateInputs() {
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
-        boolean isValid = true;
-
-        if (email.isEmpty()) {
-            emailLayout.setError("El correo no puede estar vacío");
-            isValid = false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailLayout.setError("Formato de correo inválido");
-            isValid = false;
-        } else {
-            emailLayout.setError(null);
-        }
-
-        if (password.isEmpty()) {
-            passwordLayout.setError("La contraseña no puede estar vacía");
-            isValid = false;
-        } else if (password.length() < 6) {
-            passwordLayout.setError("La contraseña debe tener al menos 6 caracteres");
-            isValid = false;
-        } else {
-            passwordLayout.setError(null);
-        }
-
-        if (isValid) {
-            Toast.makeText(this, "Validación correcta", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        // Configurar enlace de registro
+        linkRegistro.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
-            finish();
-        }
+        });
     }
 }

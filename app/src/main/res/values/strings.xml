@@ -9,4 +9,14 @@
     <string name="full_name_hint">Nombre completo</string>
     <string name="confirm_password_hint">Confirmar contraseña</string>
     <string name="register_button_text">Registrarse</string>
+    <string name="welcome_user">Bienvenido, %1$s</string>
+    <string name="edit_profile_title">Editar Perfil</string>
+    <string name="new_name_hint">Nuevo Nombre</string>
+    <string name="new_password_hint">Nueva Contraseña</string>
+    <string name="save_changes">Guardar Cambios</string>
+    <string name="profile_updated">Perfil actualizado</string>
+    <string name="complete_fields">Por favor, completa los campos</string>
+    <string name="name_hint">Nombre</string>
+    <string name="email_label">Correo</string>
+    <string name="save_changes_label">Guardar cambios</string>
 </resources>

@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.example.rombe">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="ROMBE"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ROMBE">
 
-        <!-- LoginActivity como pantalla inicial -->
-        <activity
-            android:name=".LoginActivity"
+        <!-- Login -->
+        <activity android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,14 +21,30 @@
             </intent-filter>
         </activity>
 
-        <!-- MainActivity como secundaria -->
-        <activity
-            android:name=".MainActivity"
+        <!-- Activity principal -->
+        <activity android:name=".MainActivity"
             android:exported="true" />
 
-        <!-- RegisterActivity declarada -->
-        <activity
-            android:name=".RegisterActivity"
+        <!-- Registro -->
+        <activity android:name=".RegisterActivity"
             android:exported="true" />
+
+        <!-- Juego -->
+        <activity android:name=".GameActivity"
+            android:exported="true" />
+
+        <!-- Perfil -->
+        <activity android:name=".ProfileActivity"
+            android:exported="true" />
+
+        <!-- Editar perfil -->
+        <activity android:name=".EditProfileActivity"
+            android:exported="true" />
+
+        <!-- Ranking -->
+        <activity android:name=".RankingActivity"
+            android:exported="true" />
+
     </application>
+
 </manifest>

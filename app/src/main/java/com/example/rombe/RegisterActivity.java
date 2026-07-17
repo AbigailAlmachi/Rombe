@@ -1,67 +1,59 @@
 package com.example.rombe;
 
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
 public class RegisterActivity extends AppCompatActivity {
-
-    private TextInputEditText emailEditText;
-    private TextInputEditText passwordEditText;
-    private TextInputLayout emailLayout;
-    private TextInputLayout passwordLayout;
-    private MaterialButton registerButton;
+    private EditText etName, etEmail, etPassword;
+    private Button btnRegister;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        emailEditText = findViewById(R.id.registerEmailInput);
-        passwordEditText = findViewById(R.id.registerPasswordInput);
-        emailLayout = findViewById(R.id.registerEmailLayout);
-        passwordLayout = findViewById(R.id.registerPasswordLayout);
-        registerButton = findViewById(R.id.registerButton);
+        etName = findViewById(R.id.etName);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnRegister = findViewById(R.id.btnRegister);
+        Button btnBackRegister = findViewById(R.id.btnBackRegister);
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateInputs();
+        db = AppDatabase.getInstance(this);
+
+        btnBackRegister.setOnClickListener(v -> finish());
+
+        btnRegister.setOnClickListener(v -> {
+            String name = etName.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
+
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            new Thread(() -> {
+                // Verificar si ya existe el usuario o email
+                User existingUser = db.userDao().getUserByName(name);
+                User existingEmail = db.userDao().getUserByEmail(email);
+
+                if (existingUser != null || existingEmail != null) {
+                    runOnUiThread(() -> Toast.makeText(this, "El usuario o email ya existen", Toast.LENGTH_SHORT).show());
+                    return;
+                }
+
+                User user = new User(name, email, password);
+                db.userDao().insert(user);
+                
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "¡Cuenta creada! Ahora inicia sesión", Toast.LENGTH_SHORT).show();
+                    finish(); // Regresa al Login
+                });
+            }).start();
         });
-    }
-
-    private void validateInputs() {
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
-        boolean isValid = true;
-
-        if (email.isEmpty()) {
-            emailLayout.setError("El correo no puede estar vacío");
-            isValid = false;
-        } else {
-            emailLayout.setError(null);
-        }
-
-        if (password.isEmpty()) {
-            passwordLayout.setError("La contraseña no puede estar vacía");
-            isValid = false;
-        } else if (password.length() < 6) {
-            passwordLayout.setError("La contraseña debe tener al menos 6 caracteres");
-            isValid = false;
-        } else {
-            passwordLayout.setError(null);
-        }
-
-        if (isValid) {
-            Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show();
-            finish(); // vuelve al LoginActivity
-        }
     }
 }
