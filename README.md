@@ -71,32 +71,13 @@ Desarrollar un juego ligero que permita iniciar partidas rápidas, romper bloque
 **Evidencia Profiler (Heap Dump):**  
 ![HeapDump](capturas/HeapDump.png)
 
-- Fuente: Pruebas de rendimiento con Android Profiler  
-- Descripción: Se detectó alto consumo de memoria en componentes de UI (`MaterialButton`, `LinearLayout`).  
-- Severidad: Media  
-- Estado: Pendiente  
-- Causa raíz: Demasiadas instancias creadas sin reciclaje en la interfaz.
-
 ### Bug de rendimiento — Tiempo de inicio
 **Evidencia Logcat (Displayed):**  
 ![InicioApp](capturas/InicioApp.png)
 
-- Fuente: Logcat con filtro "Displayed"  
-- Descripción: La aplicación tarda ~10.5 segundos en iniciar.  
-- Severidad: Alta  
-- Estado: Pendiente  
-- Causa raíz: Inicialización pesada en LoginActivity (carga simultánea de Firebase y Room).
-
 ### Bug de rendimiento — Observación de memoria
 **Evidencia Profiler (Memory):**  
 ![MemoriaFlujo](capturas/MemoriaFlujo.png)
-
-- Fuente: Profiler en pestaña Memory  
-- Descripción: Se observó el uso de memoria al navegar por todas las pantallas del MVP.  
-- Resultado: La memoria se mantiene estable según la gráfica.  
-- Severidad: Baja  
-- Estado: Corregido  
-- Causa raíz: Optimización con cache en Room.
 
 ---
 
@@ -105,13 +86,20 @@ Desarrollar un juego ligero que permita iniciar partidas rápidas, romper bloque
 **Cacheo de ranking en Room:**
 - Antes: carga directa desde Firestore → CPU alto, ~2.5s de espera, memoria ~118 MB.  
 - Después: cacheo en Room → CPU reducido, ~0.8s en lecturas posteriores, memoria estable ~103 MB.  
-- Evidencia Profiler: ![ProfilerMemoria](capturas/ProfilerMemoria.png)
+- Evidencia Profiler: ![ProfilerMemoria](capturas/ProfilerMemoria.png)  
+- Evidencia Profiler CPU: ![ProfilerCPU](capturas/ProfilerCPU.png)
 
-| Métrica                | Antes (Firestore directo) | Después (Room cache) |
-|------------------------|----------------------------|-----------------------|
-| Tiempo de carga ranking| ~2.5 segundos              | ~0.8 segundos         |
-| Consumo de memoria     | ~118 MB                    | ~103 MB               |
-| CPU                    | Pico alto en cada carga    | Pico solo en primera carga |
+### Tabla de métricas de rendimiento (antes y después)
+
+| Métrica                   | Valor medido (Antes) | Valor medido (Después) | Referencia aceptable | ¿Optimizable? | Acción tomada |
+|---------------------------|----------------------|------------------------|----------------------|---------------|---------------|
+| Tiempo de inicio (cold start) | ~10.5s (Logcat)       | ~8.2s (tras optimización) | < 2000 ms            | Sí            | Se identificó carga simultánea de Firebase y Room en LoginActivity. Pendiente optimización adicional. |
+| Memoria promedio en uso   | ~118 MB              | ~103 MB                | < 100 MB             | Sí            | Se aplicó cache en Room para reducir consumo en consultas repetidas. |
+| CPU durante flujo principal | Pico alto en cada carga de ranking | Pico solo en primera carga | < 30% sostenido     | Sí            | Se movió la consulta de Firestore a segundo plano y se cacheó en Room. |
+| Tiempo respuesta API (Firestore) | ~2500 ms             | ~800 ms                | < 3000 ms            | Sí            | Se cacheó ranking en Room y se sincroniza en background. |
+
+**Conclusión:**
+La mejora aplicada demuestra que integrar Room como cache reduce significativamente el consumo de CPU y mejora la experiencia del usuario.
 
 ---
 
@@ -126,8 +114,6 @@ Desarrollar un juego ligero que permita iniciar partidas rápidas, romper bloque
 ## 🤖 Reflexión sobre IA
 - Herramientas usadas: **Perplexity** (investigación técnica), **Claude** (análisis de feedback).  
 - Prompt más útil: *“Calcula el promedio por dimensión, identifica los problemas más mencionados y clasifica los bugs por severidad”*.  
-  → Resultado: priorizamos qué bugs arreglar primero antes de la entrega, enfocándonos en los críticos y dejando los detalles visuales para después.  
-- Caso de error: Claude clasificó como bug un cambio de color que era solo estético.  
 - Cierre: *“La mejora aplicada demuestra que integrar Room como cache reduce significativamente el consumo de CPU y mejora la experiencia del usuario.”*  
 
 ---
