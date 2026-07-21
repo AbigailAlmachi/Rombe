@@ -6,20 +6,30 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {User.class, Ranking.class}, version = 2)
+// Incluye todas las entidades que usarás en Room
+@Database(entities = {User.class, Ranking.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
-    private static AppDatabase instance;
 
+    private static volatile AppDatabase instance;
+
+    // DAOs disponibles
     public abstract UserDao userDao();
     public abstract RankingDao rankingDao();
 
-    public static synchronized AppDatabase getInstance(Context context) {
+    // Singleton para obtener la instancia de la base de datos
+    public static AppDatabase getInstance(Context context) {
         if (instance == null) {
-            instance = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "rombe_db")
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries() // ⚠️ para pruebas, mejor usar en hilo aparte
-                    .build();
+            synchronized (AppDatabase.class) {
+                if (instance == null) {
+                    instance = Room.databaseBuilder(
+                                    context.getApplicationContext(),
+                                    AppDatabase.class,
+                                    "rombe_db"
+                            )
+                            .fallbackToDestructiveMigration() // elimina datos si cambia versión
+                            .build();
+                }
+            }
         }
         return instance;
     }
